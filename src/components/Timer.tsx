@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from "react";
 type TimerState = "idle" | "running" | "paused";
 
 export default function Timer() {
-  const [time, setTime] = useState(10 * 60); // 10 minutes
+  const [time, setTime] = useState(15); // lowered it down for testing purposes - will change it back to 10 minutes later
   const [timerState, setTimerState] = useState<TimerState>("idle");
 
   // create ref
