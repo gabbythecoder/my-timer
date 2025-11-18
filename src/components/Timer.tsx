@@ -106,7 +106,7 @@ export default function Timer() {
           className={`text-xl border-2 border-solid rounded-lg py-1 px-4 ${
             timerFinished
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-var(--foreground) cursor-pointer"
+              : "bg-var(--background) cursor-pointer"
           }`}
           onClick={handleStartResumePause}
           disabled={timerFinished}
