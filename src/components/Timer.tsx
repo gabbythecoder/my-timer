@@ -54,7 +54,7 @@ export default function Timer() {
     }
   }, [time, timerState]);
 
-  // format time to 00:00:00
+  // format time to HH:MM:SS
   function formatTime(totalSeconds: number) {
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -99,14 +99,20 @@ export default function Timer() {
 
   return (
     <section>
-      <h1 className="text-center text-9xl">{formatTime(time)}</h1>
+      <h1
+        className={`text-center text-9xl transition-colors duration-300 ${
+          time <= 10 ? "text-[var(--font-warning)]" : "text-[var(--foreground)]"
+        }`}
+      >
+        {formatTime(time)}
+      </h1>
 
       <div className="flex gap-4 items-center justify-center mt-4">
         <button
           className={`text-xl border-2 border-solid rounded-lg py-1 px-4 ${
             timerFinished
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-var(--background) cursor-pointer"
+              : "bg-[var(--background)] cursor-pointer"
           }`}
           onClick={handleStartResumePause}
           disabled={timerFinished}
