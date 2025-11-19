@@ -2,11 +2,14 @@
 
 import { useEffect, useState, useRef } from "react";
 
+import NumberPad from "./NumerPad";
+
 type TimerState = "idle" | "running" | "paused";
 
 export default function Timer() {
-  const [time, setTime] = useState(15); // lowered it down for testing purposes - will change it back to 10 minutes later
+  const [time, setTime] = useState(10 * 60); // default - 10 minutes
   const [timerState, setTimerState] = useState<TimerState>("idle");
+  const [numberPadInput, setNumberPadInput] = useState("");
 
   // create ref
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -38,18 +41,20 @@ export default function Timer() {
     // only play audio for the last 10 seconds
     if (timerState === "running" && time <= 10 && time > 0) {
       if (lastBeepRef.current !== time) {
+        const secondsIntoAudio = 10 - time;
+        audio.currentTime = secondsIntoAudio;
         audio.play().catch(() => {});
         lastBeepRef.current = time;
       }
     }
 
     // pause audio if timer paused
-    if (timerState === "paused" && !audio.paused) {
+    else if (timerState === "paused" && !audio.paused) {
       audio.pause();
     }
 
     // resume audio if running in the last 10 seconds
-    if (timerState === "running" && time <= 10 && audio.paused) {
+    else if (timerState === "running" && time <= 10 && audio.paused) {
       audio.play().catch(() => {});
     }
   }, [time, timerState]);
@@ -66,9 +71,32 @@ export default function Timer() {
     )}:${String(seconds).padStart(2, "0")}`;
   }
 
+  // format number pad input to HH:MM:SS
+  function formatTimeFromInput(input: string) {
+    const clickedDigit = input.padStart(6, "0");
+    const hours = clickedDigit.slice(0, 2);
+    const minutes = clickedDigit.slice(2, 4);
+    const seconds = clickedDigit.slice(4, 6);
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
   // conditional rendering start/pause/resume button
   function handleStartResumePause() {
-    if (timerState === "idle" || timerState === "paused") {
+    if (timerState === "idle") {
+      if (!numberPadInput && time === 0) return;
+
+      if (numberPadInput) {
+        const timerDigit = numberPadInput.padStart(6, "0");
+        const hours = parseInt(timerDigit.slice(0, 2), 10);
+        const minutes = parseInt(timerDigit.slice(2, 4), 10);
+        const seconds = parseInt(timerDigit.slice(4, 6), 10);
+
+        const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+        setTime(totalSeconds);
+      }
+      setTimerState("running");
+    } else if (timerState === "paused") {
+      if (time === 0) return;
       setTimerState("running");
     } else if (timerState === "running") {
       setTimerState("paused");
@@ -95,27 +123,31 @@ export default function Timer() {
       : "Resume";
 
   // disable button when timer is 0
-  const timerFinished = time === 0;
+  const startDisabled =
+    (timerState === "idle" && !numberPadInput && time === 0) ||
+    (timerState !== "idle" && time === 0);
 
   return (
     <section>
       <h1
         className={`text-center text-9xl transition-colors duration-300 ${
-          time <= 10 ? "text-[var(--font-warning)]" : "text-[var(--foreground)]"
+          time <= 10 ? "text-[var(--warning)]" : "text-[var(--foreground)]"
         }`}
       >
-        {formatTime(time)}
+        {timerState === "idle" && numberPadInput
+          ? formatTimeFromInput(numberPadInput)
+          : formatTime(time)}
       </h1>
 
       <div className="flex gap-4 items-center justify-center mt-4">
         <button
           className={`text-xl border-2 border-solid rounded-lg py-1 px-4 ${
-            timerFinished
+            startDisabled
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-[var(--background)] cursor-pointer"
           }`}
           onClick={handleStartResumePause}
-          disabled={timerFinished}
+          disabled={startDisabled}
         >
           {buttonLabel}
         </button>
@@ -126,6 +158,15 @@ export default function Timer() {
         >
           Reset
         </button>
+      </div>
+
+      <div>
+        <NumberPad
+          input={numberPadInput}
+          setInput={setNumberPadInput}
+          timerState={timerState}
+          setTime={setTime}
+        />
       </div>
     </section>
   );
