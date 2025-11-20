@@ -7,29 +7,37 @@ type NumberPadProps = {
   setInput: React.Dispatch<React.SetStateAction<string>>;
   timerState: TimerState;
   setTime: (value: number) => void;
+  setTimerState: React.Dispatch<React.SetStateAction<TimerState>>;
 };
 
-export default function NumberPad({ input, setInput, timerState, setTime }: NumberPadProps) {
+export default function NumberPad({
+  input,
+  setInput,
+  timerState,
+  setTime,
+  setTimerState
+}: NumberPadProps) {
   function handleNumberPress(digit: string) {
     if (timerState === "running") return;
     if (input.length >= 6) return;
 
-    setInput(prev => prev + digit);
+    setInput((prev) => prev + digit);
   }
 
   function handleDelete() {
     if (timerState === "running") return;
-    setInput(prev => prev.slice(0, -1));
+    setInput((prev) => prev.slice(0, -1));
   }
 
   function handleClear() {
     if (timerState === "running") return;
     setInput("");
     setTime(0);
+    setTimerState("idle");
   }
 
   return (
-    <section>
+    <section className="w-lg">
       <div className="grid grid-cols-3 grid-row-4 gap-3 mt-5">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
           <button

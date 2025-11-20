@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 
 import NumberPad from "./NumerPad";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 type TimerState = "idle" | "running" | "paused";
 
@@ -93,6 +94,8 @@ export default function Timer() {
 
         const totalSeconds = hours * 3600 + minutes * 60 + seconds;
         setTime(totalSeconds);
+      } else {
+        setTime(10 * 60);
       }
       setTimerState("running");
     } else if (timerState === "paused") {
@@ -160,13 +163,27 @@ export default function Timer() {
         </button>
       </div>
 
-      <div>
-        <NumberPad
-          input={numberPadInput}
-          setInput={setNumberPadInput}
-          timerState={timerState}
-          setTime={setTime}
-        />
+      <div className="text-center mt-5">
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <button className="cursor-pointer text-lg border-2 border-solid rounded-lg py-1 px-4">
+              Set Your Time
+            </button>
+          </DropdownMenu.Trigger>
+
+          <DropdownMenu.Content side="bottom" align="center">
+            <div>
+              <NumberPad
+                input={numberPadInput}
+                setInput={setNumberPadInput}
+                timerState={timerState}
+                setTime={setTime}
+                setTimerState={setTimerState}
+              />
+            </div>
+            <DropdownMenu.Arrow className="fill-[#f5f5f5] mb-3" />
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
       </div>
     </section>
   );
