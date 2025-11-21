@@ -171,7 +171,12 @@ export default function Timer() {
             </button>
           </DropdownMenu.Trigger>
 
-          <DropdownMenu.Content side="bottom" align="center">
+          <DropdownMenu.Content
+            side="bottom"
+            align="center"
+            sideOffset={5}
+            className="absolute left-1/2 transform -translate-x-1/2 sm:top-full"
+          >
             <div>
               <NumberPad
                 input={numberPadInput}
@@ -181,7 +186,7 @@ export default function Timer() {
                 setTimerState={setTimerState}
               />
             </div>
-            <DropdownMenu.Arrow className="fill-[#f5f5f5] mb-3" />
+            <DropdownMenu.Arrow className="fill-[#f5f5f5] mb-2" />
           </DropdownMenu.Content>
         </DropdownMenu.Root>
       </div>

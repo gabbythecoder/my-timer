@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Orbitron } from "next/font/google";
 import "./globals.css";
 
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
 const orbitron = Orbitron({
   weight: ["500", "700"],
   style: ["normal"],
@@ -21,7 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={orbitron.className}>
-        {children}
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <main className="flex-1 flex items-center justify-center px-4 box-border overflow-hidden">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );
