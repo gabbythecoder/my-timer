@@ -15,12 +15,18 @@ export default function Timer() {
   // create ref
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const lastBeepRef = useRef<number | null>(null);
+  const endAudioRef = useRef<HTMLAudioElement | null>(null);
+  const playedEndRef = useRef<boolean>(false);
 
   // initialise audio
   useEffect(() => {
     audioRef.current = new Audio("/countdown.mp3");
     audioRef.current.volume = 0.5;
     audioRef.current.preload = "auto";
+
+    endAudioRef.current = new Audio("/end-buzzer.mp3");
+    endAudioRef.current.volume = 0.3;
+    endAudioRef.current.preload = "auto";
   }, []);
 
   // timer logic
@@ -37,7 +43,9 @@ export default function Timer() {
   // handle countdown audio
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    const endAudio = endAudioRef.current;
+
+    if (!audio || !endAudio) return;
 
     // only play audio for the last 10 seconds
     if (timerState === "running" && time <= 10 && time > 0) {
@@ -57,6 +65,18 @@ export default function Timer() {
     // resume audio if running in the last 10 seconds
     else if (timerState === "running" && time <= 10 && audio.paused) {
       audio.play().catch(() => {});
+    }
+
+    // end sound - when timer hits 0
+    if (timerState === "running" && time === 0 && !playedEndRef.current) {
+      endAudio.currentTime = 0;
+      endAudio.play().catch(() => {});
+      playedEndRef.current = true;
+    }
+
+    // reset when timer resets
+    if (time > 0) {
+      playedEndRef.current = false;
     }
   }, [time, timerState]);
 
