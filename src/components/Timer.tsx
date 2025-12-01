@@ -133,7 +133,7 @@ export default function Timer() {
   return (
     <section>
       <h1
-        className={`text-center text-9xl transition-colors duration-300 ${
+        className={`text-center text-6xl sm:text-9xl transition-colors duration-300 ${
           time <= 10 ? "text-[var(--warning)]" : "text-[var(--foreground)]"
         }`}
       >
@@ -144,7 +144,7 @@ export default function Timer() {
 
       <div className="flex gap-4 items-center justify-center mt-4">
         <button
-          className={`text-xl border-2 border-solid rounded-lg py-1 px-4 ${
+          className={`text-base sm:text-xl border-2 border-solid rounded-lg py-1 px-4 ${
             startDisabled
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-[var(--background)] cursor-pointer"
@@ -156,7 +156,7 @@ export default function Timer() {
         </button>
 
         <button
-          className="cursor-pointer text-xl border-2 border-solid rounded-lg py-1 px-4"
+          className="cursor-pointer text-base sm:text-xl border-2 border-solid rounded-lg py-1 px-4"
           onClick={handleReset}
         >
           Reset
@@ -166,7 +166,7 @@ export default function Timer() {
       <div className="text-center mt-5">
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <button className="cursor-pointer text-lg border-2 border-solid rounded-lg py-1 px-4">
+            <button className="cursor-pointer text-base sm:text-xl border-2 border-solid rounded-lg py-1 px-4">
               Set Your Time
             </button>
           </DropdownMenu.Trigger>

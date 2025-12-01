@@ -37,8 +37,8 @@ export default function NumberPad({
   }
 
   return (
-    <section className="w-lg">
-      <div className="grid grid-cols-3 grid-row-4 gap-3 mt-2">
+    <section className="w-xs sm:w-lg py-1 px-2">
+      <div className="grid grid-cols-3 grid-rows-4 gap-2 mt-2">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
           <button
             key={num}
